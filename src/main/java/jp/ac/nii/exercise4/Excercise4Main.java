@@ -81,7 +81,7 @@ public class Excercise4Main {
 	 * @return 計算結果を設定したConfigurationオブジェクト
 	 * @throws FileNotFoundException
 	 */
-	private static Configuration createConfiguration() throws FileNotFoundException {
+	public static Configuration createConfiguration() throws FileNotFoundException {
 		Configuration conf = new Configuration();
 		// 平均値の計算結果を読み取る
 		FileInputStream intput = new FileInputStream("exercise4_average.tsv");

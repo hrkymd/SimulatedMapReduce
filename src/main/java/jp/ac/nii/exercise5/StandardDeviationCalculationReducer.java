@@ -10,9 +10,6 @@ import com.google.common.collect.Maps;
 import jp.ac.nii.mapreduceframework.Context;
 import jp.ac.nii.mapreduceframework.Reducer;
 
-/**
- * TODO: このファイルは未完成です！
- */
 public class StandardDeviationCalculationReducer extends Reducer<String, Integer, String, Double> {
 	private Map<String, Double> subject2Average = Maps.newHashMap();
 
@@ -22,8 +19,12 @@ public class StandardDeviationCalculationReducer extends Reducer<String, Integer
 		try {
 			FileInputStream intput = new FileInputStream("exercise5_average.tsv");
 			Scanner scanner = new Scanner(intput, "UTF-8");
-			while (scanner.hasNextLine()) {
+			
+			while (scanner.hasNext()) {
 				// TODO: subject2Averageに科目名と平均値のキーバリューを保存しよう
+				String subject = scanner.next();
+				Double average = Double.parseDouble(scanner.next());
+				subject2Average.put(subject , average);
 			}
 			scanner.close();
 		} catch (FileNotFoundException e) {
@@ -35,5 +36,18 @@ public class StandardDeviationCalculationReducer extends Reducer<String, Integer
 	protected void reduce(String key, Iterable<Integer> values, Context context) {
 		// TODO: 分散を計算しよう
 		// ヒント: subject2Average フィールドを使おう！
+		
+		Double mean = subject2Average.get(key);
+		int count = 0;
+		Double sum = 0.0;
+		
+		for (Integer value : values) {
+			sum += (value - mean) * (value - mean);
+			count += 1;
+		}
+		Double var = sum / (double)count;
+		Double stdv = Math.sqrt(var);
+		context.write(key, stdv);
+		
 	}
 }

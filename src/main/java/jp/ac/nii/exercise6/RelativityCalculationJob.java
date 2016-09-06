@@ -12,7 +12,7 @@ import jp.ac.nii.mapreduceframework.NullWritable;
 /**
  * 以下の式の関連度を計算するジョブのJobです。
  *  関連度 = 商品Xと商品Yのペアの総数 / 商品Xを含むペアの総数
- *  TODO: このファイルは未完成です！
+ *  TODO: このファイルは完成です！
  */
 public class RelativityCalculationJob {
 
@@ -65,7 +65,8 @@ public class RelativityCalculationJob {
 		@Override
 		public int getPartition(String key, String value, int numReduceTasks) {
 			// TODO: removeSharp()とsuper.getPartition()メソッドを活用しよう
-			return 0;	// 注意: return 0; は誤りです
+			key = removeSharpD(key);
+			return super.getPartition(key, value, numReduceTasks);
 		}
 	}
 
@@ -77,8 +78,11 @@ public class RelativityCalculationJob {
 	public static class RelativityCalculationGroupComparator implements Comparator<String> {
 		@Override
 		public int compare(String a, String b) {
+			
 			// TODO: removeSharp()とString.compareTo()メソッドを活用しよう
-			return 0;	// 注意: return 0; は誤りです
+			String aRemoved = removeSharpD(a);
+			String bRemoved = removeSharpD(b);
+			return aRemoved.compareTo(bRemoved);
 		}
 	}
 
@@ -91,8 +95,8 @@ public class RelativityCalculationJob {
 	public static class RelativityCalculationSortComparator implements Comparator<String> {
 		@Override
 		public int compare(String a, String b) {
-			// TODO: String.compareTo()メソッドを活用しよう
-			return 0;	// 注意: return 0; は誤りです
+			// TODO: String.compareTo()メソッドを活用しよう			
+			return b.compareTo(a);
 		}
 	}
 }
